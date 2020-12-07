@@ -646,7 +646,6 @@ const result1 = new Set(findContainer("shiny gold"));
 console.log("result1", result1.size);
 
 function countInnerBags(containerColor) {
-  console.log(containerColor);
   return decodedRules
     .filter(({ container }) => container === containerColor)
     .reduce((tot, { content }) => {
