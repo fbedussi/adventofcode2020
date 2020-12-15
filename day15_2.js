@@ -7,16 +7,16 @@ const data = [2,0,6,12,1,3]
 
 function question(data, length) {
   const map = data.slice(0, data.length - 1).reduce((result, item, index) => {
-    result[item] = index
+    result.set(item, index)
     return result
-  }, {})
+  }, new Map)
   let i = data.length - 1
   let lastN = data[data.length - 1] 
   let newN
   while(i < length - 1) {
-    const lastNIndex  = map[lastN]
+    const lastNIndex  = map.get(lastN)
     newN = lastNIndex !== undefined ? i - lastNIndex : 0
-    map[lastN] = i
+    map.set(lastN,  i)
     lastN = newN
     i++
     // if (i % 50000 === 0) {
