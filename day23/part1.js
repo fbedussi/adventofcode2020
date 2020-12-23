@@ -33,7 +33,7 @@ function main(data) {
     let destinationCupLabel = currentCup.label - 1
     while (!labels.includes(destinationCupLabel) || cups.find(({label}) => label === destinationCupLabel).removed) {
       // console.log({destinationCupLabel})
-      destinationCupLabel = destinationCupLabel > minLabel + 1 ? destinationCupLabel - 1 : maxLabel
+      destinationCupLabel = destinationCupLabel >= minLabel + 1 ? destinationCupLabel - 1 : maxLabel
     }
     const pickedUpCups = cups.filter(({removed}) => removed).sort((a,b) => a.removedIndex - b.removedIndex)
     console.log('pick up:', pickedUpCups.map(({label}) => label).join(', '))
@@ -49,7 +49,7 @@ function main(data) {
       ...cup, 
       removed: false, 
       removedIndex: false,
-      current: newCurrentCupIndex < cups.length - 1 - 1 ? index === newCurrentCupIndex + 1 : index === 0
+      current: newCurrentCupIndex < cups.length - 1 ? index === newCurrentCupIndex + 1 : index === 0
     }))
   }
   console.log('final', cups)
@@ -57,7 +57,7 @@ function main(data) {
   console.log('result', result)
 }
 
-main(testData)
+main(data)
 
 
 // 76538924 too low
