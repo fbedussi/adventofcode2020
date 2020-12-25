@@ -8,23 +8,19 @@ const LIST_LENGTH = 1000000
 const MAX_MOVES = 10000000
 
 function main(baseDataStr) {
-  const baseData = baseDataStr.map(n => parseInt(n)).reverse()
-  console.log(1)
+  const baseData = baseDataStr.map(n => parseInt(n))
+  console.log('base data ready')
   const cups = new List()
-  let lastCup
+  let newCup
+  let cupsMap = {}
   for (let i = 1; i <= LIST_LENGTH; i++) {
     const label = baseData[i - 1] || i
-    const newCup = cups.insertAtBeginning({
-      label,
-      removed: false,
-    })
-    if (i === 1) {
-      lastCup = newCup
-    }
+    newCup = cups.insertAfter(newCup, label)
+    cupsMap[label] = newCup
   }
-  console.log(2)
+  console.log('data ready')
 
-  lastCup.next = cups.head
+  newCup.next = cups.head
 
   cups.setCurrent(cups.head)
   
@@ -32,43 +28,31 @@ function main(baseDataStr) {
   const maxLabel = LIST_LENGTH
 
   for (let move = 1; move <= MAX_MOVES; move++) {
-    console.log(`\n-- move ${move} --`)
-    // console.log('cups:')
-    // cups.forEach(cup => console.log(cup.data.label))
+    if (move % 100000 === 0) {
+      console.log(`\n-- move ${move} --`)
+    }
     const removedCup1 = cups.current.next
-    const removedCup2 = cups.current.next.next
-    const removedCup3 = cups.current.next.next.next
-    // console.log('removedCups', removedCup1.data.label, removedCup2.data.label, removedCup3.data.label)
+    const removedCup2 = removedCup1.next
+    const removedCup3 = removedCup2.next
 
-    cups.relinkCurrentTo(cups.current.next.next.next.next)
-    let destinationCupLabel = cups.current.data.label - 1
-    while (destinationCupLabel === 0 || destinationCupLabel === removedCup1.data.label || destinationCupLabel === removedCup2.data.label || destinationCupLabel === removedCup3.data.label) {
-      // console.log({destinationCupLabel})
+    cups.relinkCurrentTo(removedCup3.next)
+    let destinationCupLabel = cups.current.data - 1
+    while (destinationCupLabel === 0 || destinationCupLabel === removedCup1.data || destinationCupLabel === removedCup2.data || destinationCupLabel === removedCup3.data) {
       destinationCupLabel = destinationCupLabel >= minLabel + 1 ? destinationCupLabel - 1 : maxLabel
     }
-    // console.log('destinationCupLabel', destinationCupLabel)
-    const destinationCup = cups.find(cup => {
-      const label = cup.data.label
-      // console.log('label', label, destinationCupLabel)
-      return label === destinationCupLabel
-    })
-    // console.log('destinationCup', destinationCup.data.label)
+    const destinationCup = cupsMap[destinationCupLabel]
     const cupAfterDestinationCup = destinationCup.next
     destinationCup.next = removedCup1
     removedCup3.next = cupAfterDestinationCup
     cups.setCurrent(cups.current.next)
   }
-  // console.log('final', cups)
-  const cup1 = cups.find(({data: {label}}) => label === 1)
+  const cup1 = cups.find(({data}) => data === 1)
   const cupAfter1 = cup1.next
   const cupAfterCupAfter1 = cup1.next.next
-  console.log('cupAfter1', cupAfter1)
-  console.log('cupAfterCupAfter1', cupAfterCupAfter1)
-  const result = cupAfter1.data.label * cupAfterCupAfter1.data.label
+  console.log('cupAfter1', cupAfter1.data)
+  console.log('cupAfterCupAfter1', cupAfterCupAfter1.data)
+  const result = cupAfter1.data * cupAfterCupAfter1.data
   console.log('result', result)
 }
 
-main(testData)
-
-
-// 76538924 too low
+main(data)

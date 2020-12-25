@@ -1,4 +1,4 @@
-// code from https://codeburst.io/linked-lists-in-javascript-es6-code-part-1-6dd349c3dcc3
+// code derived from https://codeburst.io/linked-lists-in-javascript-es6-code-part-1-6dd349c3dcc3
 
 class Node {
   constructor(data, next = null) {
@@ -11,7 +11,6 @@ class LinkedList {
   constructor() {
     this.head = null;
     this.current = null;
-    this.length = 0;
   }
 
   setCurrent(data) {
@@ -19,38 +18,39 @@ class LinkedList {
   }
 
   insertAtBeginning(data) {
-    // A newNode object is created with property data and next = null    
     let newNode = new Node(data);
-    // The pointer next is assigned head pointer so that both pointers now point at the same node.    
     newNode.next = this.head;
-    // As we are inserting at the beginning the head pointer needs to now point at the newNode. 
     this.head = newNode;
-    this.length++
-    return this.head;
+    return newNode;
   }
 
-  insertAtEnd(data, linkWithHead) {
-    // A newNode object is created with property data and next=null
+  insertAtEnd(data) {
     let newNode = new Node(data);
-    // When head = null i.e. the list is empty, then head itself will point to the newNode.    
-    this.length++
     
     if (!this.head) {
       this.head = newNode;
-      return this.head;
-    }
-    
-    if (linkWithHead) {
-      newNode.next = this.head
+      return newNode;
     }
 
-    // Else, traverse the list to find the tail (the tail node will initially be pointing at null), and update the tail's next pointer.   
     let tail = this.head;
     while (tail.next !== null) {
       tail = tail.next;
     }
     tail.next = newNode; 
-    return this.head;
+    return newNode;
+  }
+
+  insertAfter(prev, data) {
+    let newNode = new Node(data);
+    
+    if (!this.head) {
+      this.head = newNode;
+      return newNode;
+    }
+
+    let tail = prev || this.head;
+    tail.next = newNode; 
+    return newNode;
   }
 
   getAt(index) {
@@ -67,24 +67,22 @@ class LinkedList {
   }
 
   insertAt(data, index) {
-    // if the list is empty i.e. head = null        
-    this.length++
     if (!this.head) {
       this.head = new Node(data);
-      return;
+      return this.head;
     }
-    // if new node needs to be inserted at the front of the list i.e. before the head.         
+
     if (index === 0) {
       this.head = new Node(data, this.head);
-      return;
+      return this.head;
     }
-    // else, use getAt() to find the previous node.        
+
     const previous = this.getAt(index - 1);
     let newNode = new Node(data);
     newNode.next = previous.next;
     previous.next = newNode;
 
-    return this.head
+    return newNode
   }
 
   relinkCurrentTo(node) {
@@ -115,7 +113,6 @@ class LinkedList {
     if (!this.head) {
       return;
     }
-    this.length--
     this.head = this.head.next;
     return this.head;
   }
@@ -124,8 +121,7 @@ class LinkedList {
     if (!this.head) {
       return null;
     }    
-    // if only one node in the list
-    this.length--
+
     if (!this.head.next) {
       this.head = null;
       return;
@@ -142,19 +138,15 @@ class LinkedList {
   }
 
   deleteAt(index) {
-    // when list is empty i.e. head = null
     if (!this.head) {
-      // this.head = new Node(data);
       return;
     }
-    // node needs to be deleted from the front of the list i.e. before the head.
+
     if (index === 0) {
       this.head = this.head.next;
-      this.length--
-
       return;
     }
-    // else, use getAt() to find the previous node.
+
     const previous = this.getAt(index - 1);
 
     if (!previous || !previous.next) {
@@ -162,8 +154,6 @@ class LinkedList {
     }
 
     previous.next = previous.next.next;
-    this.length--
-
     return this.head
   }
 
