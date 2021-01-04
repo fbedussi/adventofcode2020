@@ -4,11 +4,23 @@ data = [1765, 1742, 1756, 1688, 1973, 1684, 1711, 1728, 1603, 1674, 1850, 1836, 
 result = None
 for first in data:
     for second in data[1:]:
+        if first + second == 2020:
+            print(first, second)
+            result = first * second
+            print('result1', result)
+            break
+
+    if result:
+        break
+
+result = None
+for first in data:
+    for second in data[1:]:
         for third in data[2:]:
             if first + second + third == 2020:
                 print(first, second, third)
                 result = first * second * third
-                print('result', result)
+                print('result2', result)
                 break
 
         if result:
